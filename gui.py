@@ -1,9 +1,12 @@
 from functions import *
 import PySimpleGUI as sg
+import time
 
-sg.theme('Dark')
+sg.theme('Black')
 
+clock = sg.Text('', key='clock')
 label = sg.Text("Type in a todo")
+
 input_box = sg.InputText(tooltip="Enter todo", size=60,
                          key="todo", default_text='')
 add_button = sg.Button("Add")
@@ -16,7 +19,8 @@ complete_button = sg.Button("Complete")
 exit_button = sg.Button("Exit")
 
 window = sg.Window('My todo App',
-                   layout=[[label],
+                   layout=[[clock],
+                           [label],
                            [input_box, add_button],
                            [list_box, edit_button, complete_button],
                            [exit_button],
@@ -27,19 +31,24 @@ window = sg.Window('My todo App',
 
 while True:
 
-    event, values = window.read()
-    print('Event:',event)
-    print('Values:',values)
+    event, values = window.read(timeout=1000)
+    window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
     match event:
         case 'Add':
-            todos = get_todos()
-            new_todo = values['todo'] + "\n"
-            todos.append(new_todo)
-            store_todos(todos)
-            input_box.update(value='')
-            list_box.update(values=get_todos())
+            if values['todo']:
+                todos = get_todos()
+                new_todo = values['todo'] + "\n"
+                todos.append(new_todo)
+                store_todos(todos)
+                input_box.update(value='')
+                list_box.update(values=get_todos())
         case 'Edit':
-            todo_to_edit = values['todos'][0]
+            try:
+                todo_to_edit = values['todos'][0]
+            except IndexError:
+                sg.popup("Please, choose an item first.",
+                         font=("Helvetica", 15))
+                continue
             new_todo = values['todo'] + '\n'
 
             todos =get_todos()
@@ -49,8 +58,12 @@ while True:
             list_box.update(values=todos)
             input_box.update(value='')
         case 'Complete':
-            todo_to_complete = values['todos'][0]
-
+            try:
+                todo_to_complete = values['todos'][0]
+            except IndexError:
+                sg.popup("Please, choose an item first.",
+                         font=("Helvetica", 15))
+                continue
             todos = get_todos()
             todos.remove(todo_to_complete)
             store_todos(todos)
