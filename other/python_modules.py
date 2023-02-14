@@ -32,7 +32,7 @@ import webbrowser
 
 # ___________________shutil experiment
 
-# shutil.make_archive("../files/output", "zip", "../files")
+shutil.make_archive("../files/output", "zip", "../files")
 
 # ___________________webbrowser experiment
 
