@@ -1,6 +1,12 @@
 from functions import *
 import PySimpleGUI as sg
 import time
+import os
+
+if not os.path.exists("todos.txt"):
+    print('Creating file.')
+    with open('todos.txt', 'w') as file:
+        pass
 
 sg.theme('Black')
 
@@ -9,12 +15,19 @@ label = sg.Text("Type in a todo")
 
 input_box = sg.InputText(tooltip="Enter todo", size=60,
                          key="todo", default_text='')
-add_button = sg.Button("Add")
+# Text Button
+# add_button = sg.Button("Add", size=10)
+add_button = sg.Button(size=10, image_filename='add.png',
+                       tooltip="Add", mouseover_colors="LightBlue",
+                       key="Add")
 
 list_box = sg.Listbox(values=get_todos(), key='todos',
                       enable_events=True, size=(60, 10))
 edit_button = sg.Button("Edit")
-complete_button = sg.Button("Complete")
+# Text button
+# complete_button = sg.Button("Complete")
+complete_button = sg.Button(size=10, image_filename="complete.png",
+                            tooltip="Complete", key="Complete")
 
 exit_button = sg.Button("Exit")
 
@@ -24,7 +37,7 @@ window = sg.Window('My todo App',
                            [input_box, add_button],
                            [list_box, edit_button, complete_button],
                            [exit_button],
-                          ],
+                           ],
                    font=('Helvetica', 10)
                    )
 
@@ -32,6 +45,8 @@ window = sg.Window('My todo App',
 while True:
 
     event, values = window.read(timeout=1000)
+    print(event)
+    print(values)
     window['clock'].update(value=time.strftime("%b %d, %Y %H:%M:%S"))
     match event:
         case 'Add':

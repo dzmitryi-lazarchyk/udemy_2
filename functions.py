@@ -1,4 +1,4 @@
-def get_todos(filename='files/todos.txt'):
+def get_todos(filename='todos.txt'):
     """This function returns the list of
     todos from a read file."""
     with open(filename, 'r') as file:
@@ -6,7 +6,7 @@ def get_todos(filename='files/todos.txt'):
     return todos_local
 
 
-def store_todos(todos_local, filename='files/todos.txt'):
+def store_todos(todos_local, filename='todos.txt'):
     """Write the to-do items list in the text file."""
     with open(filename, 'w') as file:
         file.writelines(todos_local)
